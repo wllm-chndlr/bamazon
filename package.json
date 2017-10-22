@@ -1,0 +1,23 @@
+{
+  "name": "bamazon",
+  "version": "1.0.0",
+  "description": "an online retailer similar to amazon",
+  "main": "bamazonCustomer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wllm-chndlr/bamazon.git"
+  },
+  "author": "wbc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wllm-chndlr/bamazon/issues"
+  },
+  "homepage": "https://github.com/wllm-chndlr/bamazon#readme",
+  "dependencies": {
+    "inquirer": "^3.3.0",
+    "mysql": "^2.15.0"
+  }
+}
