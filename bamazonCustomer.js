@@ -17,24 +17,43 @@ var connection = mysql.createConnection({
 connection.connect(function(error) {
   console.log("Connected as id: " + connection.threadId);
   if (error) throw error;
-  // run the start function after the connection is made to prompt the user
-  start();
-  connection.end();
+  // run the initialize function after the connection is made to prompt the user
+  initialize();
 });
 
-// function which prompts the user for what action they should take
-function start() {
+// initialize function allows user to view inventory or exit application
+function initialize() {
+  inquirer.prompt(
+    {
+      name: "viewOrExit",
+      type: "confirm",
+      message: "Greetings! Would you like to view available inventory?"
+    })
+    .then(function(answer) {
+      // based on their answer, either show inventory via purchase function or exit application
+      if (answer.viewOrExit === true) {
+        purchase();
+      }
+      else {
+        console.log("Thanks for visiting!")
+        connection.end();
+      }
+    });
+}
+
+// function which displays inventory and allows user to select items/quantity
+function purchase() {
   connection.query("SELECT * FROM products", function(error, results) {
     if (error) throw error;
     console.log("AVAILABLE ITEMS:");
-    for (var i = 0; i<results.length; i++) {
+    for (var i = 0; i < results.length; i++) {
       console.log(results[i].id + ' | ' + results[i].product_name + ' | ' + '$'+results[i].price);
     }
     inquirer.prompt([
       {
         name: "purchaseItem",
         type: "input",
-        message: "which item would you like to purchase? (enter ID)",
+        message: "Which item would you like to purchase? (enter item #)",
         validate: function(value) {
           if (isNaN(value) === false) {
             return true;
@@ -45,7 +64,7 @@ function start() {
       {
         name: "purchaseQuantity",
         type: "input",
-        message: "how many would you like to purchase? (enter quantity)",
+        message: "Wow many would you like to purchase? (enter quantity)",
         validate: function(value) {
           if (isNaN(value) === false) {
             return true;
@@ -54,15 +73,86 @@ function start() {
         }
       }
     ]).then(function(answer) {
-      // console.log("results[0].product_name: " + results[0].product_name);
-      // console.log("answer.purchaseItem: " + answer.purchaseItem);
-      var chosenItem;
+      // var chosenItem;
       for (var i = 0; i < results.length; i++) {
         if (results[i].id === parseInt(answer.purchaseItem)) {
           chosenItem = results[i].product_name;
+          chosenPrice = results[i].price;
+          chosenId = results[i].id;
+          chosenQuantity = answer.purchaseQuantity;
+          availableQuantity = results[i].stock_quantity;
+          totalPrice = ((chosenPrice * chosenQuantity) * 1.0825).toFixed(2);
         }
       }
-      console.log("You've selected " + chosenItem);
+      if(chosenQuantity < availableQuantity) {
+        console.log("You've selected " + '(' + answer.purchaseQuantity + ') ' + chosenItem);
+        console.log("Total purchase price: " + '$' + totalPrice + ' (includes TX sales tax)');
+        inquirer.prompt(
+          {
+            name: "purchaseNow",
+            type: "confirm",
+            message: "Purchase now?"
+          })
+          .then(function(answer) {
+            // based on their answer, either update inventory or exit
+            if (answer.purchaseNow === true) {
+              connection.query(
+                "UPDATE products SET ? WHERE ?",
+                [
+                  {
+                    stock_quantity: availableQuantity - chosenQuantity
+                  },
+                  {
+                    id: chosenId
+                  }
+                ],
+                function(error) {
+                  if (error) throw err;
+                }
+              );
+              console.log("Thanks for your purchase!");
+              inquirer.prompt(
+                {
+                  name: "restartOrExit",
+                  type: "confirm",
+                  message: "Would you like to look at other products?"
+                })
+                .then(function(answer) {
+                  // based on their answer, either show inventory or exit
+                  if (answer.restartOrExit === true) {
+                    purchase();
+                  }
+                  else {
+                    console.log("Thanks for visiting!")
+                    connection.end();
+                  }
+                });
+            }
+            else {
+              console.log("Thanks for visiting!")
+              connection.end();
+            }
+          });
+      }
+      else {
+        console.log("Sorry - we don't have enough stock available!");
+        inquirer.prompt(
+          {
+            name: "lowStock",
+            type: "confirm",
+            message: "Would you like to start over?"
+          })
+          .then(function(answer) {
+            // based on their answer, either show inventory or exit
+            if (answer.lowStock === true) {
+              purchase();
+            }
+            else {
+              console.log("Thanks for visiting!")
+              connection.end();
+            }
+          });
+      }
     })
   });
 }
