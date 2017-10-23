@@ -37,7 +37,7 @@ function menu() {
         viewLowInventory();
       }
       else if (answer.menuOptions === "Add Inventory") {
-        // addInventory();
+        addInventory();
       }
       else if (answer.menuOptions === "Add New Product") {
         // addNewInventory();
@@ -79,57 +79,50 @@ function addInventory() {
     inquirer
       .prompt([
         {
-          name: "choice",
-          type: "rawlist",
+          name: "inventorySelect",
+          type: "list",
+          message: "What item needs more inventory?",
           choices: function() {
             var choiceArray = [];
             for (var i = 0; i < results.length; i++) {
-              choiceArray.push(results[i].item_name);
+              choiceArray.push(results[i].id + ' | ' + results[i].product_name + ' | ' + '$'+results[i].price + ' | ' + results[i].stock_quantity);
             }
             return choiceArray;
-          },
-          message: "What auction would you like to place a bid in?"
+          }
         },
         {
-          name: "bid",
+          name: "additionalQuantity",
           type: "input",
-          message: "How much would you like to bid?"
+          message: "How many units of inventory would you like to add?"
         }
       ])
       .then(function(answer) {
         // get the information of the chosen item
-        var chosenItem;
+        console.log(answer.inventorySelect[0]);
+
         for (var i = 0; i < results.length; i++) {
-          if (results[i].item_name === answer.choice) {
-            chosenItem = results[i];
+          if (results[i].id === parseInt(answer.purchaseItem)) {
+            selectedItem = results[i].product_name;
+            selectedId = results[i].id;
+            selectedQuantity = answer.inventorySelect;
+            availableQuantity = results[i].stock_quantity;
           }
         }
-
-        // determine if bid was high enough
-        if (chosenItem.highest_bid < parseInt(answer.bid)) {
-          // bid was high enough, so update db, let the user know, and start over
-          connection.query(
-            "UPDATE auctions SET ? WHERE ?",
-            [
-              {
-                highest_bid: answer.bid
-              },
-              {
-                id: chosenItem.id
-              }
-            ],
-            function(error) {
-              if (error) throw err;
-              console.log("Bid placed successfully!");
-              start();
+        
+        connection.query(
+          "UPDATE products SET ? WHERE ?",
+          [
+            {
+              stock_quantity: availableQuantity + selectedQuantity
+            },
+            {
+              id: selectedId
             }
-          );
-        }
-        else {
-          // bid wasn't high enough, so apologize and start over
-          console.log("Your bid was too low. Try again...");
-          start();
-        }
+          ],
+          function(error) {
+            if (error) throw error;
+          }
+        );
       });
   });
 }
