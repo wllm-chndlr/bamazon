@@ -81,7 +81,7 @@ function addInventory() {
         {
           name: "inventorySelect",
           type: "list",
-          message: "What item needs more inventory?",
+          message: "Which item needs more inventory?",
           choices: function() {
             var choiceArray = [];
             for (var i = 0; i < results.length; i++) {
@@ -97,32 +97,49 @@ function addInventory() {
         }
       ])
       .then(function(answer) {
-        // get the information of the chosen item
-        console.log(answer.inventorySelect[0]);
+       
+        console.log(results);
 
         for (var i = 0; i < results.length; i++) {
           if (results[i].id === parseInt(answer.purchaseItem)) {
-            selectedItem = results[i].product_name;
-            selectedId = results[i].id;
-            selectedQuantity = answer.inventorySelect;
+            chosenItem = results[i].product_name;
+            chosenPrice = results[i].price;
+            chosenId = results[i].id;
+            chosenQuantity = answer.purchaseQuantity;
             availableQuantity = results[i].stock_quantity;
+            totalPrice = ((chosenPrice * chosenQuantity) * 1.0825).toFixed(2);
           }
         }
-        
-        connection.query(
-          "UPDATE products SET ? WHERE ?",
-          [
-            {
-              stock_quantity: availableQuantity + selectedQuantity
-            },
-            {
-              id: selectedId
-            }
-          ],
-          function(error) {
-            if (error) throw error;
-          }
-        );
+
+        // console.log(answer);
+        // console.log(answer.inventorySelect);
+
+        availableQuantity = answer.inventorySelect[3];
+        selectedQuantity = parseInt(answer.additionalQuantity);  // THIS IS FINE
+        selectedId = answer.inventorySelect[0];
+
+        // newQuantity = 
+
+        // console.log("Answer.inventorySelect: " + answer.inventorySelect[6]);
+        // console.log("Available quantity: " + availableQuantity);
+        // console.log("Selected quantity: " + selectedQuantity);
+
+        // connection.query(
+        //   "UPDATE products SET ? WHERE ?",
+        //   [
+        //     {
+        //       stock_quantity: newQuantity
+        //     },
+        //     {
+        //       id: selectedId
+        //     }
+        //   ],
+        //   function(error) {
+        //     if (error) throw error;
+        //   }
+        // );
+        // console.log(selectedQuantity + " units added.");
       });
   });
+  // viewProducts();
 }
