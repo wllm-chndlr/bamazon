@@ -20,7 +20,11 @@ It's as easy as that!
 
 ## For managers:
 
-To get started, type 'node bamazonManager.js' into your terminal. You'll then see four options.
+To get started, type 'node bamazonManager.js' into your terminal. You'll then see four options:
+* View Products
+* View Low Inventory
+* Add Inventory
+* Add New Product
 
 ![m1](assets/m1.png)
 
@@ -47,3 +51,5 @@ And you're all set!
 Call us anytime at 828-282-8282 or write us at [bamazon@globalmonolith.com](#).
 
 ## Thanks for visiting BAMazon!
+
+###### © 2017 BAMazon
