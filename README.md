@@ -1,14 +1,14 @@
 ![Image of Bamazon](https://pmcdeadline2.files.wordpress.com/2016/01/bamazon_0.jpg)
 
-# Welcome to Bamazon, your source for bamazing products!
+# Welcome to BAMazon, your source for BAMazing products!
 
-## Customers: 
+## For customers: 
 
 To get started, type 'node bamazonCustomer.js' into your terminal. You'll then be asked if you'd like to view available inventory:
 
 ![c1](assets/c1.png)
 
-If you select 'y' you'll then see all available inventory. You'll also be able to select the product you'd like to purchase.
+If you input 'y' you'll then see all available inventory. You'll also be able to select the product you'd like to purchase.
 
 ![c2](assets/c2.png)
 
@@ -16,7 +16,7 @@ You can then select an item, specify a quantity, and review your order before pu
 
 ![c3](assets/c3.png)
 
-## Managers: type 'node bamazonManager.js' into your terminal
+## For managers:
 
 To get started, type 'node bamazonManager.js' into your terminal. You'll then see four options.
 
