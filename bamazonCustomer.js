@@ -86,7 +86,7 @@ function purchase() {
           totalPrice = ((chosenPrice * chosenQuantity) * 1.0825).toFixed(2);
         }
       }
-      if(chosenQuantity < availableQuantity) {
+      if(chosenQuantity <= availableQuantity) {
         console.log("You've selected " + '(' + answer.purchaseQuantity + ') ' + chosenItem);
         console.log("Total purchase price: " + '$' + totalPrice + ' (includes TX sales tax)');
         inquirer.prompt(
