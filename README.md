@@ -16,6 +16,8 @@ You can then select an item, specify a quantity, and review your order before pu
 
 ![c3](assets/c3.png)
 
+It's as easy as that!
+
 ## For managers:
 
 To get started, type 'node bamazonManager.js' into your terminal. You'll then see four options.
@@ -38,4 +40,10 @@ If you select 'Add New Product' you'll be able to add a brand new product.
 
 ![m5](assets/m5.png)
 
-## Thanks for visiting Bamazon!
+And you're all set!
+
+## Questions?
+
+Call us anytime at 828-282-8282 or write us at [bamazon@globalmonolith.com](#).
+
+## Thanks for visiting BAMazon!
