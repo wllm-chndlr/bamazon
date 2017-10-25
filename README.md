@@ -12,7 +12,7 @@ If you input 'y' you'll then see all available inventory. You'll also be able to
 
 ![c2](assets/c2.png)
 
-You can then select an item, specify a quantity, and review your order before purchasing. 
+Select an item, specify a quantity, and review your order before purchasing. 
 
 ![c3](assets/c3.png)
 

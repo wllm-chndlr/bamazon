@@ -15,7 +15,7 @@ var connection = mysql.createConnection({
 
 // connect to the mysql server and sql database
 connection.connect(function(error) {
-  console.log("Connected as id: " + connection.threadId);
+  // console.log("Connected as id: " + connection.threadId);
   if (error) throw error;
   // run the initialize function after the connection is made to prompt the user
   initialize();
@@ -55,8 +55,10 @@ function purchase() {
         type: "input",
         message: "Which item would you like to purchase? (enter item #)",
         validate: function(value) {
-          if (isNaN(value) === false) {
-            return true;
+          for (var j = 0; j < results.length; j++) {
+            if (isNaN(value) === false && parseInt(value) === results[j].id) {
+              return true;
+            }
           }
           return false;
         }
@@ -66,7 +68,7 @@ function purchase() {
         type: "input",
         message: "Wow many would you like to purchase? (enter quantity)",
         validate: function(value) {
-          if (isNaN(value) === false) {
+          if (isNaN(value) === false && parseInt(value) > 0) {
             return true;
           }
           return false;

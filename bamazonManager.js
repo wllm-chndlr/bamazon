@@ -86,8 +86,10 @@ function addInventory() {
           type: "input",
           message: "Which item needs more inventory? (enter item #)",
           validate: function(value) {
-            if (isNaN(value) === false) {
-              return true;
+            for (var j = 0; j < results.length; j++) {
+              if (isNaN(value) === false && parseInt(value) === results[j].id) {
+                return true;
+              }
             }
             return false;
           }
