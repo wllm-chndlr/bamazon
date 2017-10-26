@@ -18,7 +18,7 @@ connection.connect(function(error) {
   menu();
 });
 
-// function which prompts the user for what action they should take
+// function that shows the user the available options
 function menu() {
   inquirer
     .prompt({
@@ -28,8 +28,7 @@ function menu() {
       choices: ["View Products", "View Low Inventory", "Add Inventory", "Add New Product"]
     })
     .then(function(answer) {
-      // console.log(answer.menuOptions);
-      // based on their answer, either call the bid or the post functions
+      // based on their answer, run appropriate function
       if (answer.menuOptions === "View Products") {
         viewProducts();
       }
@@ -48,6 +47,7 @@ function menu() {
     });
 }
 
+// function that shows all available inventory
 function viewProducts() {
   connection.query("SELECT * FROM products", function(error, results) {
     if (error) throw error;
@@ -56,10 +56,10 @@ function viewProducts() {
       console.log(results[i].id + ' | ' + results[i].product_name + ' | ' + '$'+results[i].price + ' | ' + results[i].stock_quantity);
     }
   });
-  // menu();
   connection.end();
 }
 
+// function that shows all items with inventory less than five
 function viewLowInventory() {
   connection.query("SELECT * FROM products", function(error, results) {
     if (error) throw error;
@@ -73,6 +73,7 @@ function viewLowInventory() {
   connection.end();
 }
 
+// function that allows user to add inventory to a specific product
 function addInventory() {
   connection.query("SELECT * FROM products", function(error, results) {
     if (error) throw error;
@@ -107,22 +108,15 @@ function addInventory() {
         }
       ])
       .then(function(answer) {
-       
         for (var i = 0; i < results.length; i++) {
           if (results[i].id === parseInt(answer.inventorySelect)) {
             selectedItem = results[i].product_name;
-            // selectedId = results[i].id;
             selectedId = parseInt(answer.inventorySelect);
             selectedQuantity = parseInt(answer.additionalQuantity);
             availableQuantity = results[i].stock_quantity;
             newQuantity = (availableQuantity + selectedQuantity);
           }
         }
-
-        // console.log(selectedQuantity);
-        // console.log(availableQuantity);
-        // console.log(newQuantity);
-
         connection.query(
           "UPDATE products SET ? WHERE ?",
           [
@@ -158,6 +152,7 @@ function addInventory() {
   });
 }
 
+// function that allows user to add a new product
 function addNewProduct() {
   connection.query("SELECT * FROM products", function(error, results) {
     if (error) throw error;
@@ -197,7 +192,7 @@ function addNewProduct() {
       }
     ])
     .then(function(answer) {
-       
+      
       newId = results.length + 1;
       newName = answer.newProductName;
       newDepartment = answer.newProductDepartment;
@@ -224,7 +219,7 @@ function addNewProduct() {
           message: "Would you like to add another item?"
         })
         .then(function(answer) {
-          // based on their answer, either re-start add inventory function or exit
+          // based on their answer, either re-start add new product function or exit
           if (answer.addAnotherProduct === true) {
             addNewProduct();
           }

@@ -2,8 +2,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
-var itemId;
-
 // create the connection information for the sql database
 var connection = mysql.createConnection({
   host: "localhost",
@@ -15,13 +13,12 @@ var connection = mysql.createConnection({
 
 // connect to the mysql server and sql database
 connection.connect(function(error) {
-  // console.log("Connected as id: " + connection.threadId);
   if (error) throw error;
   // run the initialize function after the connection is made to prompt the user
   initialize();
 });
 
-// initialize function allows user to view inventory or exit application
+// function that allows user to view inventory or exit application
 function initialize() {
   inquirer.prompt(
     {
@@ -41,7 +38,7 @@ function initialize() {
     });
 }
 
-// function which displays inventory and allows user to select items/quantity
+// function that displays inventory and allows user to select items/quantity
 function purchase() {
   connection.query("SELECT * FROM products", function(error, results) {
     if (error) throw error;
@@ -75,7 +72,6 @@ function purchase() {
         }
       }
     ]).then(function(answer) {
-      // var chosenItem;
       for (var i = 0; i < results.length; i++) {
         if (results[i].id === parseInt(answer.purchaseItem)) {
           chosenItem = results[i].product_name;
